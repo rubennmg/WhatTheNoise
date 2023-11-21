@@ -1,11 +1,14 @@
 # WhatTheNoise
 
+<div style="text-align: justify">
 Sistema para escuchar eventos dentro de un sistema físico (máquina, dispositivo, etc) usando dos micrófonos, localizando el origen y tipo del sonido y registrándolo.
+</div>
 
 ## Fases
 
 ### Fase 1: Localización y registro de sonidos
 
+<div style="text-align: justify">
 Implementación de un sistema que sea capaz de detectar sonidos cercanos mediante dos micrófonos y localizar el origen (de forma aproximada) mediante técnicas TDOA(Time Difference Of Arrival). Se dispondrá de una Rapsberry Pi con dos micrófonos USB.
 
 El sistema deberá permitir configuración de umbral de sonido y calibración. Con lo que tendrá un pequeño front-end web para configurarlo.
@@ -20,8 +23,12 @@ Al menos, debe detectar y registrar tres tipos de sonidos:
 
 - **Puntuales** (tipo golpe, chasquido, etc) donde se registra todo el sonido y su posición relativa.
 
+</div>
+
 ### Fase 2: Creación de un dataset para la clasificación de los sonidos
 
+<div style="text-align: justify">
 Se creará una pequeña aplicación (web, cloud o de escritorio) que cruce los datos de los sonidos antes registrados, con los eventos y estados registrados de la máquina/sistema en un fichero de log aparte dado, donde también hay un registro de tiempo. Se buscará una relación entre los sonidos y esos eventos y estados y se clasificarán en base a esta.
 
 El proyecto debe utilizar el estado del arte actual.
+</div>
