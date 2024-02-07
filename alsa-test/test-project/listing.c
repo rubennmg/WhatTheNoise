@@ -1,6 +1,9 @@
 #include <alsa/asoundlib.h>
 #include <stdio.h>
 
+/*
+ * This example lists the PCM stream types, access types, formats, subformats and states.
+ */
 int main(int argc, char *argv[])
 {
     int val;
