@@ -22,6 +22,7 @@ int main()
     snd_pcm_uframes_t frames;
 
     // ---------  DEBUG ------------
+    printf("-----------------------------\n");
     printf("rc address: %p\n", &rc);
     printf("handle address: %p\n", &handle);
     printf("params address: %p\n", &params);
@@ -31,6 +32,7 @@ int main()
     printf("frames address: %p\n", &frames);
     printf("hints address: %p\n", &hints);
     printf("name address: %p\n", &name);
+    printf("-----------------------------\n");
     // ---------  DEBUG ------------
 
     // Obtain PCM devices list
@@ -59,7 +61,7 @@ int main()
     snd_device_name_free_hint((void **)hints);
 
     // Open PCM device for playback
-    rc = snd_pcm_open(&handle, "hdmi", SND_PCM_STREAM_PLAYBACK, 0);
+    rc = snd_pcm_open(&handle, "default", SND_PCM_STREAM_PLAYBACK, 0);
     if (rc < 0)
     {
         fprintf(stderr, "\nERR: unable to open pcm device: %s, error code: %d \n", snd_strerror(rc), rc);
