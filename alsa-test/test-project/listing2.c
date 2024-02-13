@@ -4,7 +4,7 @@
 
 /*
  * This example lists the PCM devices list, opens the "hdmi" PCM device, sets some 
- * parameters, and then displays the vallue of most of the hardware parameters.
+ * parameters, and then displays the value of most of the hardware parameters.
  * It does not perform any sound playback or recording.
  * Error checking has been omitted to keep the code simple.
  * ~ rubennmg
