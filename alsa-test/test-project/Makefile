@@ -5,7 +5,7 @@ listing:
 # -lasound is the library for ALSA
 
 listing2: 
-	gcc -o listing2 listing2.c -lasound -g
+	gcc -o listing2 listing2.c -lasound 
 # gdb ./listing2 
 # gdb is the GNU debugger
 # option -g is for valgrind debugging
