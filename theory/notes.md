@@ -1,7 +1,7 @@
 # Implementación y código
 #### FASE 1. Localización y registro de sonidos
 - Mediante la Raspberry Pi se gestionarán los dos micrófonos y se ejecutará el código 
-- Librería ALSA (Advanced Linux Sound Architecture) para la adquisición de audio en C/C++
+- Librería ALSA (Advanced Linux Sound Architecture) para la adquisición de audio en C/C++. También se puede usar PortAudio, es una API de más alto nivel.
 - Técnicas TDOA (Time Difference Of Arrival) --> INVESTIGAR (parte teórica)
 
 #### FASE 2. Creación de un dataset para la clasificación
