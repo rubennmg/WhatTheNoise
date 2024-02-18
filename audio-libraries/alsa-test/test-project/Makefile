@@ -1,4 +1,4 @@
-all: listing listing2 portaudio
+all: listing listing2
 
 listing: 
 	gcc -o listing listing.c -lasound
@@ -7,11 +7,7 @@ listing:
 listing2: 
 	gcc -o listing2 listing2.c -lasound 
 # gdb ./listing2 
-# gdb is the GNU debugger
 # option -g is for valgrind debugging
 
-portaudio: 
-	gcc -o portaudio portaudio-test.c -lportaudio
-
 clean:
-	rm -f listing listing2 portaudio
+	rm -f listing listing2

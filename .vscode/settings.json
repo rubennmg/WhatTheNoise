@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "swresample.h": "c",
+        "avformat.h": "c",
+        "avcodec.h": "c"
+    }
+}
