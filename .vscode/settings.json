@@ -2,6 +2,7 @@
     "files.associations": {
         "swresample.h": "c",
         "avformat.h": "c",
-        "avcodec.h": "c"
+        "avcodec.h": "c",
+        "portaudio.h": "c"
     }
 }
