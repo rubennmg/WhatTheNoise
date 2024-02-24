@@ -115,7 +115,7 @@ int main(int argc, char **argv)
               &outputParameters,
               SAMPLE_RATE,
               FRAMES_PER_BUFFER,
-              paClipOff, /* We won't output out of range samples so don't bother clipping them */
+              paClipOff, 
               playCallback,
               &data);
     if (err != paNoError) goto error;
