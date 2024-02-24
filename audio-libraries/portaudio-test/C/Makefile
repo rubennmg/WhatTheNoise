@@ -1,4 +1,4 @@
-all: portaudio
+all: portaudio record play
 
 portaudio: 
 	gcc -o portaudio portaudio-test.c -lportaudio
@@ -10,4 +10,4 @@ play:
 	gcc -o play play.c -lportaudio
 
 clean:
-	rm -f portaudio
+	rm -f portaudio record play
