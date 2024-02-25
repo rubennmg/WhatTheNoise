@@ -59,7 +59,7 @@ static int playCallback(const void *inputBuffer, void *outputBuffer,
 int main(int argc, char **argv)
 {
     if (argc < 2) {
-        printf("Uso: %s <archivo.raw>\n", argv[0]);
+        printf("USO: %s <archivo.raw>\n", argv[0]);
         return 1;
     }
 
@@ -79,6 +79,8 @@ int main(int argc, char **argv)
     data.frameIndex = 0;
     int numSamples = data.maxFrameIndex * NUM_CHANNELS; /* Total number of samples */
     int numBytes = numSamples * sizeof(SAMPLE); /* Size of the sample array in bytes */
+    printf("Número de muestras a leer del archivo: %d\n", numSamples);
+    printf("Tamaño del array de muestras en bytes: %d\n", numBytes);
     data.recordedSamples = (SAMPLE *)malloc(numBytes); /* Allocate memory for the sample array */
     if (data.recordedSamples == NULL)
     {
@@ -91,9 +93,17 @@ int main(int argc, char **argv)
     fclose(file);
     if (bytesRead < (size_t)numSamples)
     {
-        fprintf(stderr, "Archivo leÃ­do incompleto: se esperaban %d muestras, se leyeron %zu\n", numSamples, bytesRead);
+        fprintf(stderr, "Archivo leído incompleto: se esperaban %d muestras, se leyeron %zu\n", numSamples, bytesRead);
         free(data.recordedSamples);
         return 1;
+    }
+
+    // Número de muestras leídas del archivo
+    printf("Número de muestras leídas del archivo: %zu\n", data.maxFrameIndex * NUM_CHANNELS);
+    // Mostrar por consola los samples leídos del fichero
+    printf("Primeros 30 samples leídos del archivo:\n");
+    for (int i = 0; i < 30; i++) {
+        printf("índice: %d --- amplitud: %f\n", data.frameIndex, data.recordedSamples[i]);
     }
 
     err = Pa_Initialize();

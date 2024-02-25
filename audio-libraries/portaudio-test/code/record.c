@@ -187,6 +187,9 @@ int main(void)
     }
 #endif
 
+// Convert RAW audio to MP4 using FFmpeg
+system("ffmpeg -f f32le -ar 44100 -ac 2 -i recorded.raw recorded.mp4");
+
 done:
     Pa_Terminate();
     if (data.recordedSamples)
