@@ -14,5 +14,4 @@ En este escenario se plantean múltiples nodos referencia (NR) que en sincronía
 ## TDoA (Time Difference of Arrival)
 La estimación en la Diferencia del Tiempo de Llegada requiere la medición de la diferencia de tiempo entre las señales entrantes hacia dos NR. Geométricamente puede representarse mediante hipérbolas. <br/>
 Asumiendo de nuevo un escenario coplanar donde hay tres NR (sus coordenadas son conocidas), con dos mediciones TDoA se podrá localizar el ND. <br/><br/>
-![Principio de posicionamiento para TDoA
-representado por hipérbolas](image.png)
+![Principio de posicionamiento para TDoArepresentado por hipérbolas](img/2.png)
