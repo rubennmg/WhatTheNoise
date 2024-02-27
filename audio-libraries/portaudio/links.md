@@ -1,0 +1,2 @@
+- VIDEO -> [Capture audio in C++](https://www.youtube.com/watch?v=jpsJCji71Ec)
+    - [Github repo](https://github.com/chrisrouck/tutorial-cpp-audio-capture)
