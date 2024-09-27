@@ -1,0 +1,1 @@
+![Micrófonos USB](img/1.png)

@@ -13,7 +13,6 @@ static int audioCallback(const void *inputBuffer, void *outputBuffer,
     FILE *file = (FILE *)userData;
     const float *input = (const float*)inputBuffer;
 
-    // write audio samples to file
     fwrite(input, sizeof(float), framesPerBuffer, file);
 
     return paContinue;
@@ -25,7 +24,6 @@ int main()
     PaStream *stream;
     FILE *file;
 
-    // open file for writing
     file = fopen("audio.raw", "wb");
     if (file == NULL) 
     {
@@ -33,7 +31,6 @@ int main()
         return 1;
     }
 
-    // initialize
     err = Pa_Initialize();
     if (err != paNoError) 
     {
@@ -41,7 +38,6 @@ int main()
         return 1;
     }
 
-    // open audio stream
     err = Pa_OpenDefaultStream(&stream, 1, 0, paFloat32, SAMPLE_RATE, FRAMES_PER_BUFFER, audioCallback, file); // 1 0 to record
     if (err != paNoError) 
     {
@@ -49,22 +45,18 @@ int main()
         return 1;
     }
 
-    // start audio stream
     err = Pa_StartStream(stream);
     if (err != paNoError) 
     {
         printf("PortAudio error [3]: %s\n", Pa_GetErrorText(err));
-        Pa_CloseStream(stream); // close stream
-        Pa_Terminate(); // terminate
-        fclose(file); // close file
+        Pa_CloseStream(stream);
+        Pa_Terminate(); 
+        fclose(file); 
         return 1;
     }
 
-    // wait for user input
     printf("Press ENTER to stop the audio stream...\n");
     getchar();
-
-    // stop audio stream
     err = Pa_StopStream(stream);
     if (err != paNoError) 
     {
@@ -75,7 +67,6 @@ int main()
         return 1;
     }
 
-    // close audio stream
     err = Pa_CloseStream(stream);
     if (err != paNoError) 
     {
@@ -85,10 +76,8 @@ int main()
         return 1;
     }
 
-    // terminate
     Pa_Terminate();
     
-    // close file
     fclose(file);
 
     return 0;

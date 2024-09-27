@@ -1,0 +1,13 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<section id="recording_results" class="container text-center">
+  <h2>La grabación ha terminado</h2>
+  <p style="margin-top: 2rem;">Consulte la carpeta generada con los resultados obtenidos.</p>
+  <a
+    href="{{ url_for('main.index') }}"
+    class="btn btn-primary mt-5 mb-5"
+    >Volver a inicio</a
+  >
+</section>
+{% endblock %}

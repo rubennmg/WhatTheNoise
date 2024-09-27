@@ -1,0 +1,95 @@
+/* ------------------------ */
+/* -------- GENEREAL -------- */
+/* ------------------------ */
+body {
+  font-family: "Roboto", sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}
+
+footer .container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* -------------------------- */
+/* -------- INTRO VIEW -------- */
+/* -------------------------- */
+section#intro_content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+/* --------------------------- */
+/* ------ CONFIG FORM VIEW ------ */
+/* --------------------------- */
+section#config_form {
+  padding-bottom: 2rem;
+}
+
+section#config_form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+section#config_form .info-icon {
+  margin-left: 5px;
+  cursor: pointer;
+  color: #0d6efd;
+}
+
+section#config_form div.buttons {
+  display: flex;
+  justify-content: space-between !important;
+  margin-top: 2.25rem;
+  margin-bottom: 2rem;
+}
+
+.tooltip-inner {
+  background-color: #f8f9fa !important;
+  color: #212529 !important;
+}
+
+.tooltip-arrow::before {
+  border-top-color: #f8f9fa !important;
+}
+
+.tooltip {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.tooltip.show {
+  opacity: 1 !important;
+}
+
+.form-check-input {
+  width: 21px;
+  height: 21px;
+}
+
+.form-check-label {
+  margin-top: 4px;
+}
+
+/* -------------------------- */
+/* -------- ABOUT VIEW -------- */
+/* -------------------------- */
+section#about_content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}

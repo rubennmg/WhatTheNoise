@@ -1,3 +1,3 @@
 make clean
-make play
-./play recorded.raw
+make record-2
+./record-2.o

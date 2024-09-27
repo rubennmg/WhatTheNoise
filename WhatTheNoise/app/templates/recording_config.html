@@ -1,0 +1,202 @@
+{% extends "base.html" %} {% block content %}
+<section id="config_form" class="container">
+  <h2 class="mb-5">Formulario de configuración</h2>
+  <div class="d-flex justify-content-center pt-3">
+    <form
+      action="{{ url_for('main.start_recording') }}"
+      method="POST"
+      class="w-75"
+      onsubmit="return validateForm()"
+    >
+      <div class="row">
+        <div class="col-md-6 mt-3 mb-3 position-relative">
+          <label for="mic1" class="form-label">
+            <span
+              class="info-icon"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Seleccione el primer micrófono"
+            >
+              <i class="bi bi-info-circle"></i>
+            </span>
+            Micrófono 1:
+          </label>
+          <select id="mic1" name="mic_1" class="form-select" required>
+            {% for device in devices %}
+            <option value="{{ device }}">{{ device }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-6 mt-3 mb-3">
+          <label for="mic2" class="form-label">
+            <span
+              class="info-icon"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Seleccione el segundo micrófono"
+            >
+              <i class="bi bi-info-circle"></i>
+            </span>
+            Micrófono 2:
+          </label>
+          <select id="mic2" name="mic_2" class="form-select" required>
+            {% for device in devices %}
+            <option value="{{ device }}">{{ device }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-6 mt-3 mb-3">
+          <label for="sample_rate" class="form-label">
+            <span
+              class="info-icon"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Seleccione la frecuencia de muestreo a configurar para ambos micrófonos. 
+                      Se recomienda usar 44100Hz"
+            >
+              <i class="bi bi-info-circle"></i>
+            </span>
+            Frecuencia de muestreo (Hz):
+          </label>
+          <select
+            id="sample_rate"
+            name="sample_rate"
+            class="form-select"
+            required
+          >
+            {% for sample_rate in sample_rates %}
+            <option value="{{ sample_rate }}">{{ sample_rate }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-6 mt-3 mb-3">
+          <label for="threshold" class="form-label">
+            <span
+              class="info-icon"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Seleccione el umbral a configurar. Está definido en tres niveles (alto, medio, bajo) 
+                      en función del ruido del entorno. Se recomienda el valor medio"
+            >
+              <i class="bi bi-info-circle"></i>
+            </span>
+            Umbral mínimo para la detección de audio:
+          </label>
+          <select id="threshold" name="threshold" class="form-select" required>
+            <option value=""></option>
+            <option value="0.04">Bajo</option>
+            <option value="0.06">Medio</option>
+            <option value="0.08">Alto</option>
+          </select>
+        </div>
+        <div class="col-md-6 mt-3 mb-3">
+          <label for="silence_precision" class="form-label">
+            <span
+              class="info-icon"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Seleccione la duración de la grabación. Se recomienda un valor de 10 segundos"
+            >
+              <i class="bi bi-info-circle"></i>
+            </span>
+            Margen en la detección de silencios:
+          </label>
+          <select
+            id="silence_precision"
+            name="silence_precision"
+            class="form-select"
+            required
+          >
+            <option value=""></option>
+            <option value="0.2">Bajo</option>
+            <option value="0.4">Medio</option>
+            <option value="0.6">Alto</option>
+          </select>
+        </div>
+        <div class="col-md-6 mt-3 mb-3">
+          <label for="num_channels" class="form-label">
+            <span
+              class="info-icon"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="La grabación está restringida a ser monocanal. Esto facilita el tratamiento y análisis de audio"
+            >
+              <i class="bi bi-info-circle"></i>
+            </span>
+            Distancia entre micrófonos (m):
+          </label>
+          <input
+            type="number"
+            class="form-control"
+            />
+        </div>
+        <div
+          class="col-md-6 mt-3 mb-3 d-flex align-items-center justify-content-start"
+        >
+          <div class="form-check me-5">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="portaudio"
+              name="use_portaudio"
+              onClick="toggleCheckbox('portaudio')"
+            />
+            <label class="form-check-label" for="portaudio">
+              <span
+                class="info-icon"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="Utilice esta opción para grabar utilizando la biblioteca PortAudio."
+              >
+                <i class="bi bi-info-circle"></i>
+              </span>
+              Usar PortAudio
+            </label>
+          </div>
+        </div>
+        <div
+          class="col-md-6 mt-3 mb-3 d-flex align-items-center justify-content-start"
+        >
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="alsa"
+              name="use_alsa"
+              onClick="toggleCheckbox('alsa')"
+            />
+            <label class="form-check-label" for="alsa">
+              <span
+                class="info-icon"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="Utilice esta opción para grabar utilizando la biblioteca ALSA."
+              >
+                <i class="bi bi-info-circle"></i>
+              </span>
+              Usar ALSA
+            </label>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <span class="text-danger">*</span>
+          <span style="font-size: 13px; color: grey;">
+            Abmas implementaciones están desarrolladas de la misma forma, con
+            detalles propios de cada una de las dos arquitecturas. PortAudio aporta 
+            mayor compatibilidad con diferentes dispositivos, mientras que ALSA está 
+            orientado específicamente a sistemas Linux.
+          </span>
+        </div>
+        <div class="buttons">
+          <a href="{{ url_for('main.index') }}" class="btn btn-secondary"
+            >Volver</a
+          >
+          <button type="submit" class="btn btn-primary">
+            Iniciar grabación
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

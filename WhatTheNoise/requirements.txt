@@ -1,0 +1,5 @@
+Flask
+Numpy
+Scipy
+Watchdog
+Gunicorn

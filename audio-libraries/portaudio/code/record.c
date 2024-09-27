@@ -5,21 +5,39 @@
 #define SAMPLE_RATE (44100)
 #define FRAMES_PER_BUFFER (512)
 #define NUM_SECONDS (5)
-#define NUM_CHANNELS (2)
+#define NUM_CHANNELS (1)
 #define DITHER_FLAG (0)
 #define WRITE_TO_FILE (1)
 
-#define PA_SAMPLE_TYPE paFloat32
+/* select sample format */
+#if 0
+#define PA_SAMPLE_TYPE  paFloat32
 typedef float SAMPLE;
-#define SAMPLE_SILENCE (0.0f)
+#define SAMPLE_SILENCE  (0.0f)
 #define PRINTF_S_FORMAT "%.8f"
+#elif 1
+#define PA_SAMPLE_TYPE  paInt16
+typedef short SAMPLE;
+#define SAMPLE_SILENCE  (0)
+#define PRINTF_S_FORMAT "%d"
+#elif 0
+#define PA_SAMPLE_TYPE  paInt8
+typedef char SAMPLE;
+#define SAMPLE_SILENCE  (0)
+#define PRINTF_S_FORMAT "%d"
+#else
+#define PA_SAMPLE_TYPE  paUInt8
+typedef unsigned char SAMPLE;
+#define SAMPLE_SILENCE  (128)
+#define PRINTF_S_FORMAT "%d"
+#endif
 
 typedef struct
 {
-    int frameIndex; /* Index into sample array. */
+    int frameIndex; /* index into sample array */
     int maxFrameIndex;
     SAMPLE *recordedSamples;
-} paTestData;
+} paData;
 
 static int recordCallback(const void *inputBuffer, void *outputBuffer,
                           unsigned long framesPerBuffer,
@@ -27,7 +45,7 @@ static int recordCallback(const void *inputBuffer, void *outputBuffer,
                           PaStreamCallbackFlags statusFlags,
                           void *userData)
 {
-    paTestData *data = (paTestData *)userData;
+    paData *data = (paData *)userData;
     const SAMPLE *rptr = (const SAMPLE *)inputBuffer;
     SAMPLE *wptr = &data->recordedSamples[data->frameIndex * NUM_CHANNELS];
     long framesToCalc;
@@ -73,15 +91,12 @@ static int recordCallback(const void *inputBuffer, void *outputBuffer,
     return finished;
 }
 
-int main(void);
-
 int main(void)
 {
-    PaStreamParameters inputParameters,
-        outputParameters;
+    PaStreamParameters inputParameters;
     PaStream *stream;
     PaError err = paNoError;
-    paTestData data; // struct to hold data
+    paData data; /* struct to hold data */
     int i;
     int totalFrames;
     int numSamples;
@@ -89,9 +104,13 @@ int main(void)
     SAMPLE max, val;
     double average;
 
-    printf("patest_record.c\n");
-    fflush(stdout);
+    // console info
+    printf("Sample rate: %d\n", SAMPLE_RATE);
+    printf("Frames per buffer: %d\n", FRAMES_PER_BUFFER);
+    printf("Number of channels: %d\n", NUM_CHANNELS);
+    printf("Sample type: %d\n", PA_SAMPLE_TYPE);
 
+    // data initialization
     data.maxFrameIndex = totalFrames = NUM_SECONDS * SAMPLE_RATE;
     data.frameIndex = 0;
     numSamples = totalFrames * NUM_CHANNELS;
@@ -105,21 +124,32 @@ int main(void)
     for (i = 0; i < numSamples; i++)
         data.recordedSamples[i] = 0;
 
+    // portaudio initialization
     err = Pa_Initialize();
     if (err != paNoError)
         goto done;
 
-    inputParameters.device = Pa_GetDefaultInputDevice();
+    // list available sound apis
+    printf("\nAPI COUNT: %d\n", Pa_GetHostApiCount());
+    for (i = 0; i < Pa_GetHostApiCount(); i++)
+    {
+        printf("API NAME: %s\n", Pa_GetHostApiInfo(i)->name);
+    }
+
+    // input device parameters initialization
+    printf("\nSELECTED INPUT DEVICE: %s\n", Pa_GetDeviceInfo(2)->name); // second usb micorphone
+    inputParameters.device = inputParameters.device = 2; // seocnd usb microphone
     if (inputParameters.device == paNoDevice)
     {
         fprintf(stderr, "Error: No default input device.\n");
         goto done;
     }
-    inputParameters.channelCount = 2;
+    inputParameters.channelCount = NUM_CHANNELS;
     inputParameters.sampleFormat = PA_SAMPLE_TYPE;
     inputParameters.suggestedLatency = Pa_GetDeviceInfo(inputParameters.device)->defaultLowInputLatency;
     inputParameters.hostApiSpecificStreamInfo = NULL;
 
+    // open audio stream
     err = Pa_OpenStream(
         &stream,
         &inputParameters,
@@ -132,25 +162,31 @@ int main(void)
     if (err != paNoError)
         goto done;
 
+    // start audio stream
     err = Pa_StartStream(stream);
     if (err != paNoError)
         goto done;
     printf("\n=== Now recording!! Please speak into the microphone. ===\n");
     fflush(stdout);
 
+    // wait for stream to finish
+    i = 0;
     while ((err = Pa_IsStreamActive(stream)) == 1)
     {
         Pa_Sleep(1000);
-        printf("index = %d\n", data.frameIndex);
+        printf("index (%d) = %d\n", i, data.frameIndex);
         fflush(stdout);
+        i++;
     }
     if (err < 0)
         goto done;
 
+    // close audio stream
     err = Pa_CloseStream(stream);
     if (err != paNoError)
         goto done;
 
+    // calculate max amplitude and average amplitude
     max = 0;
     average = 0.0;
     for (i = 0; i < numSamples; i++)
@@ -167,9 +203,10 @@ int main(void)
 
     average = average / (double)numSamples;
 
-    printf("sample max amplitude = " PRINTF_S_FORMAT "\n", max);
-    printf("sample average = %lf\n", average);
+    printf("Sample max amplitude = " PRINTF_S_FORMAT "\n", max);
+    printf("Sample average = %lf\n", average);
 
+// write to file
 #if WRITE_TO_FILE
     {
         FILE *fid;
@@ -186,9 +223,6 @@ int main(void)
         }
     }
 #endif
-
-// Convert RAW audio to MP4 using FFmpeg
-system("ffmpeg -f f32le -ar 44100 -ac 2 -i recorded.raw recorded.mp4");
 
 done:
     Pa_Terminate();

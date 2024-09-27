@@ -1,0 +1,41 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<section id="recording_in_progress" class="container text-center">
+  <h2>Grabación en Curso</h2>
+  <p>La grabación ha comenzado. Puede detenerla o finalizarla utilizando los botones a continuación.</p>
+  <p>Tiempo transcurrido: <span id="timer">00:00:00</span></p>
+  <div class="d-flex justify-content-between container w-50">
+    <form action="{{ url_for('main.stop_recording') }}" method="post" class="mb-3">
+      <button type="submit" class="btn btn-danger">Detener Grabación</button>
+    </form>
+    <form action="{{ url_for('main.finish_recording') }}" method="post">
+      <button type="submit" class="btn btn-success">Finalizar Grabación</button>
+    </form>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Timer logic
+    let startTime = Date.now();
+
+    function updateTimer() {
+      let elapsedTime = Date.now() - startTime;
+      let hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+      let minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
+      let seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+
+      hours = hours.toString().padStart(2, '0');
+      minutes = minutes.toString().padStart(2, '0');
+      seconds = seconds.toString().padStart(2, '0');
+
+      document.getElementById('timer').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    setInterval(updateTimer, 1000);
+  });
+</script>
+{% endblock %}

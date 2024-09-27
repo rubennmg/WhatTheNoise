@@ -67,11 +67,9 @@ int main(int argc, char **argv)
     PaError err;
     paTestData data;
 
-    // Inicializar FFmpeg
     av_register_all();
     avcodec_register_all();
 
-    // Abrir archivo de formato
     AVFormatContext *formatContext = NULL;
     if (avformat_open_input(&formatContext, filePath, NULL, NULL) != 0)
     {
@@ -79,7 +77,6 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    // Obtener información del archivo
     if (avformat_find_stream_info(formatContext, NULL) < 0)
     {
         fprintf(stderr, "Error: No se pudo encontrar información del archivo: %s\n", filePath);
@@ -87,7 +84,6 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    // Encontrar el flujo de audio
     int audioStreamIndex = -1;
     for (int i = 0; i < formatContext->nb_streams; i++)
     {
@@ -105,7 +101,6 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    // Obtener contexto del códec
     AVCodecParameters *codecParameters = formatContext->streams[audioStreamIndex]->codecpar;
     AVCodec *codec = avcodec_find_decoder(codecParameters->codec_id);
     if (!codec)
@@ -139,7 +134,6 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    // Configurar parámetros de salida para PortAudio
     data.maxFrameIndex = NUM_SECONDS * SAMPLE_RATE * NUM_CHANNELS; /* Total number of frames to play */
     data.frameIndex = 0;
     int numSamples = data.maxFrameIndex; /* Total number of samples */
@@ -154,7 +148,6 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    // Leer audio del archivo y almacenarlo en data.recordedSamples
     AVPacket packet;
     int dataSize = 0;
     while (av_read_frame(formatContext, &packet) >= 0)
@@ -183,7 +176,6 @@ int main(int argc, char **argv)
         av_packet_unref(&packet);
     }
 
-    // Inicializar PortAudio
     err = Pa_Initialize();
     if (err != paNoError)
     {
@@ -195,7 +187,6 @@ int main(int argc, char **argv)
         return err;
     }
 
-    // Configurar parámetros de salida de PortAudio
     outputParameters.device = Pa_GetDefaultOutputDevice(); /* Default output device */
     if (outputParameters.device == paNoDevice)
     {
@@ -212,7 +203,6 @@ int main(int argc, char **argv)
     outputParameters.suggestedLatency = Pa_GetDeviceInfo(outputParameters.device)->defaultLowOutputLatency;
     outputParameters.hostApiSpecificStreamInfo = NULL;
 
-    // Abrir el stream de PortAudio
     err = Pa_OpenStream(
         &stream,
         NULL, /* No input */
@@ -233,7 +223,6 @@ int main(int argc, char **argv)
         return err;
     }
 
-    // Iniciar el stream de PortAudio
     err = Pa_StartStream(stream);
     if (err != paNoError)
     {
@@ -250,11 +239,9 @@ int main(int argc, char **argv)
     printf("Reproducción de audio desde el archivo: %s\n", filePath);
     printf("Presione Ctrl+C para detener la reproducción.\n");
 
-    // Esperar a que finalice la reproducción
     while (Pa_IsStreamActive(stream))
         Pa_Sleep(100);
 
-    // Cerrar el stream de PortAudio
     err = Pa_CloseStream(stream);
     if (err != paNoError)
     {
@@ -267,10 +254,8 @@ int main(int argc, char **argv)
         return err;
     }
 
-    // Terminar PortAudio
     Pa_Terminate();
 
-    // Liberar recursos
     avcodec_close(codecContext);
     avformat_close_input(&formatContext);
     avcodec_free_context(&codecContext);
